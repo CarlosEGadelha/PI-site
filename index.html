@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Classificação de Placas</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+    <!-- ------------------------- HEADER ------------------------- -->
+
+<div>
+    <header>
+        <h1 id="tituloMenu">Bot de Discord de Classificação de Imagens com Deep Learning</h1>
+        <div class="menu"></div>
+    </header>
+
+    <!-- ------------------------- MAIN ------------------------- -->
+
+    <main>
+        <section class="conteudoSection">
+            <h1 class="tituloSection" id="historia">Introdução</h1>
+            <p><time datetime="2020-03-26">10 de Junho de 2022</time></p>
+            <p>Uma das principais aplicações de Inteligência Artificial é o reconhecimento de
+            imagens e para este trabalho criamos um modelo de Machine Learning utilizando
+            uma rede neural para tal função. O problema consiste em utilizar um dataset de
+            imagens para a criação do modelo e treiná-lo de maneira que este seja capaz de
+            identificar do que se trata uma imagem e então implementar este modelo em um
+            bot do Discord. Dentre as diversas opções de dataset escolhemos o de classificação
+            de placas de trânsito, assim o objetivo era que o algoritmo fosse capaz de reconhecer
+            qual é a placa de trânsito que o usuário enviar.</p>
+        </section>
+
+        <section class="conteudoSection">
+            <h1 class="tituloSection"> Desenvolvimento</h1>
+            <p>Para o nosso projeto a arquitetura da rede neural escolhida foi a Rede Neural
+            Convolucional (CNN), que se trata de um algoritmo de deep learning, que é capaz
+            de receber uma imagem como entrada, atribuir peso a aspectos da imagem e então
+            distinguir uma imagem de outra.</p>
+            <p>O primeiro passo para a criação do modelo foi pegar as imagens para o treino e
+            teste da rede neural. O dataset utilizado se encontra no Kaggle <a href="https://www.tecmundo.com.br/tecnologia/42523-o-que-e-tecnologia-.htm">(Dataset 
+            de Placas)</a></p>
+            <p>Com o dataset pronto precisamos fazer um pré-processamento, este processo consiste em pegar
+            todas as imagens e deixa-las em um padrão de tamanho e classificadas, a classificação
+            dessas imagens é feita a partir das classes do dataset, como estamos lidando com
+            placas de trânsito cada placa corresponde a uma, como “Pare”, “Lombada”, “Obras
+            à frente” enfim, são no total 43 classes para o nosso modelo e cada imagem deve
+            corresponder à uma delas. O dataset disponibilizado tem mais que 50.000 imagens,
+            que são divididas entre as imagens usada para o aprendizado do modelo e as outras
+            para testar sua precisão.</p>
+            <P>Para todos esses passos utilizamos o Tensorflow e o Keras que são plataformas 
+            para criação, treinamento e avaliação de redes neurais. Após a separação das imagens 
+            para os dataset de treino e teste, começamos o processo de treinamento do modelo 
+            da rede neural. A arquitetura do nosso modelo é a seguinte:</P>
+            <ul>
+                <li>2 Conv2D layer (filter=32, kernel_size=(5,5), activation=”relu”)</li>
+                <li>MaxPoli2D layer ( poli_size=(2,2))</li>
+                <li>Dropout layer (rate=0.25)</li>
+                <li>2 Conv2D layer (filter=64, kernel_size=(3,3), activation=”relu”)</li>
+                <li>MaxPoli2D layer ( poli_size=(2,2))</li>
+                <li>Dropout layer (rate=0.25)</li>
+                <li>Flatten layer to squeeze the layers into 1 dimension</li>
+                <li>Dense Fully connected layer (256 nodes, activation=”relu”)</li>
+                <li>Dropout layer (rate=0.5)</li>
+                <li>Dense layer (43 nodes, activation=”softmax”)</li>
+            </ul>
+            
+            <p>Essas camadas são responsáveis por processar a imagem recebida, utilizando a
+            função Conv2D que é a função convolucional que atribui o valor para os aspectos
+            de todas as imagens que ele receberá. Assim criado o modelo colocaremos todos os
+            dataset para serem processados pelo mesmo, recebendo como retorno sua precisão
+            que mostra o quanto o modelo tem acertado de suas previsões.</p>
+
+            <figure class="figurePosition">
+                <img class="imgConteudos" src="imagens/dados.png"
+                    alt="Gráfico de Precisão e Perda">
+            </figure>
+
+            <p>A ideia é que quanto mais tempo o modelo treine mais preciso ele fica, apesar de 
+            ter um limite, pois nunca acertará 100% das vezes, assim chega um momento que aumentar 
+            o treino não surgirá mais efeito positivo na precisão. E então testaremos o modelo 
+            treinado com o dataset de testes contendo as imagens que ele não viu em seu treino, 
+            para que ele tente prever imagens novas. E satisfeito com o teste salvamos o modelo 
+            para então passa-lo ao bot do Discord.</p>
+        </section>
+
+        <section class="conteudoSection">
+            <h1 class="tituloSection">Discord</h1>
+            <p>Para criar um bot no discord entramos no site para desenvolvedores do próprio
+            discord e criamos o bot, então criamos um URL para que o bot criado entre no
+            servidor e terminado esse processo colocamos o código do modelo no bot.</p>
+            <p>Para tal fizemos um arquivo em python, instalamos a biblioteca do discord e
+            então fizemos o código que conecta ao nosso bot pelo seu tolken, uma “chave” única
+            para cada bot. Então programamos para que quando o bot receber um comando
+            especifico (no nosso caso o comando é “<>placas”) ele pegue a imagem vinculada a
+            mensagem, deixe a imagem com a dimensão padrão do nosso modelo (basicamente mudando 
+            o tamanho da imagem) e então manda para o modelo e retorna sua predição para o discord.</p>
+
+            <figure class="figurePosition">
+                <img class="imgResultado" src="imagens/resultado.png"
+                    alt="Reconhecimento da Placa">
+            </figure>
+        </section>
+
+        <section class="conteudoSection">
+            <h1 class="tituloSection">Referências</h1>
+            <p>DataScienceAcademy, Deep Learning Book, 2022. Dísponivel em <a href="https://www.deeplearningbook.com.br/introducao-as-redes-neurais-convolucionais/#:~:text=Uma%20Rede%20Neural%20Convolucional%20">https://www.deeplearningbook.com.br/introducao-as-redes-neurais-convolucionais/#:~:text=Uma%20Rede%20Neural%20Convolucional%20</a>. Acesso em: 05/06/2022.</p>
+
+            <p>Código Fonte TV, Reconhecimento de Imagens com DeepLearning usando TensorFlow e Keras // Mão no Código by Red Hat 8, 2021. Dísponivel em <a href="https://www.youtube.com/watch?v=7MItgjXU3_E">https://www.youtube.com/watch?v=7MItgjXU3_E</a>. Acesso em: 04/06/2022.</p>
+
+            <p>ROSA, Daniel. Tutorial de criação de bot para o Discord em Python – crie um bot do Discord e hospede-o de graça, 2021. Dísponivel em <a href="https://www.freecodecamp.org/portuguese/news/tutorial-de-criacao-de-bot-para-o-discord-em-python/">https://www.freecodecamp.org/portuguese/news/tutorial-de-criacao-de-bot-para-o-discord-em-python/</a>. Acesso em: 04/06/2022.</p>
+
+            <p>DataFlair. Python Project on Traffic Signs Recognition with 95% Accuracy using CNN Keras, 2022. Dísponivel em <a href="https://data-flair.training/blogs/python-project-traffic-signs-recognition/">https://data-flair.training/blogs/python-project-traffic-signs-recognition/</a>. Acesso em: 03/06/2022.</p>
+        </section>
+    </main>
+</div>
+</body>
+
+</html>
